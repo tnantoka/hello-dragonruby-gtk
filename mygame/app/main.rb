@@ -16,6 +16,8 @@ class Game
 
     state.enemy_x ||= grid.center_x - 32
     state.enemy_dx ||= 5
+
+    state.bullets ||= []
   end
 
   def handle_inputs
@@ -26,6 +28,16 @@ class Game
     else
       state.player_dx = 0
     end
+
+    if inputs.keyboard.key_up.space
+      state.bullets << state.new_entity(:bullet) do |bullet|
+        bullet.y = player_rect[:y]
+        bullet.x = player_rect[:x] + 16
+        bullet.size = 32
+        bullet.dy = 10
+        bullet.solid = { x: bullet.x, y: bullet.y, w: bullet.size, h: bullet.size, r: 255, g: 100, b: 100 }
+      end
+    end
   end
 
   def update_state
@@ -35,12 +47,24 @@ class Game
     if state.enemy_x < 0 || state.enemy_x > grid.w - 64
       state.enemy_dx *= -1
     end
+
+    state.bullets.each do |bullet|
+      bullet.y += bullet.dy
+      bullet.solid[:y] = bullet.y
+
+      if bullet.y > grid.h
+        bullet.dead = true
+      end
+    end
+    state.bullets = state.bullets.reject(&:dead)
   end
 
   def output
-    outputs.solids << Solid.new(x: state.player_x, y: grid.h * 0.1, w: 64, h: 64)
+    outputs.solids << Solid.new(player_rect)
 
     outputs.solids << Solid.new(x: state.enemy_x, y: grid.h * 0.7, w: 64, h: 64, r: 150, g: 150, b: 150)
+
+    outputs.solids << state.bullets.map(&:solid)
 
     outputs.lines << Line.new(x: 0, y: grid.center_y, x2: grid.w, y2: grid.center_y)
     outputs.lines << Line.new(x: grid.center_x, y: 0, x2: grid.center_x, y2: grid.h)
@@ -56,6 +80,12 @@ class Game
 
   def to_s
     serialize.to_s
+  end
+
+  private
+
+  def player_rect
+    { x: state.player_x, y: grid.h * 0.1, w: 64, h: 64 }
   end
 end
 
