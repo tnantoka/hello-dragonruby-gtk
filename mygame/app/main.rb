@@ -55,6 +55,9 @@ class Game
       if bullet.y > grid.h
         bullet.dead = true
       end
+      if bullet.solid.intersect_rect?(enemy_rect)
+        bullet.dead = true
+      end
     end
     state.bullets = state.bullets.reject(&:dead)
   end
@@ -62,7 +65,7 @@ class Game
   def output
     outputs.solids << Solid.new(player_rect)
 
-    outputs.solids << Solid.new(x: state.enemy_x, y: grid.h * 0.7, w: 64, h: 64, r: 150, g: 150, b: 150)
+    outputs.solids << Solid.new(enemy_rect.merge(r: 150, g: 150, b: 150))
 
     outputs.solids << state.bullets.map(&:solid)
 
@@ -86,6 +89,10 @@ class Game
 
   def player_rect
     { x: state.player_x, y: grid.h * 0.1, w: 64, h: 64 }
+  end
+
+  def enemy_rect
+    { x: state.enemy_x, y: grid.h * 0.7, w: 64, h: 64 }
   end
 end
 
