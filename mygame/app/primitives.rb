@@ -28,3 +28,8 @@ class Solid < Primitive
   @@attr_keys = %i[x y w h r g b a]
   attr_accessor(*@@attr_keys)
 end
+
+class Line < Primitive
+  @@attr_keys = %i[x y x2 y2 r g b a]
+  attr_accessor(*@@attr_keys)
+end
