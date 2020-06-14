@@ -13,6 +13,9 @@ class Game
   def set_defaults
     state.player_x ||= grid.center_x - 32
     state.player_dx ||= 0
+
+    state.enemy_x ||= grid.center_x - 32
+    state.enemy_dx ||= 5
   end
 
   def handle_inputs
@@ -27,10 +30,17 @@ class Game
 
   def update_state
     state.player_x += state.player_dx
+
+    state.enemy_x += state.enemy_dx
+    if state.enemy_x < 0 || state.enemy_x > grid.w - 64
+      state.enemy_dx *= -1
+    end
   end
 
   def output
     outputs.solids << Solid.new(x: state.player_x, y: grid.h * 0.1, w: 64, h: 64)
+
+    outputs.solids << Solid.new(x: state.enemy_x, y: grid.h * 0.7, w: 64, h: 64, r: 150, g: 150, b: 150)
 
     outputs.lines << Line.new(x: 0, y: grid.center_y, x2: grid.w, y2: grid.center_y)
     outputs.lines << Line.new(x: grid.center_x, y: 0, x2: grid.center_x, y2: grid.h)
