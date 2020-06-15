@@ -1,0 +1,7 @@
+devid=hello-dragonruby-gtk
+devtitle=Hello DragonRuby GTK
+gameid=hello-dragonruby-gtk
+gametitle=Hello DragonRuby GTK
+version=0.1
+icon=metadata/icon.png
+
