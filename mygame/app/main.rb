@@ -37,7 +37,7 @@ class Game
         bullet.x = player_rect[:x] + 16
         bullet.size = 32
         bullet.dy = 10
-        bullet.solid = { x: bullet.x, y: bullet.y, w: bullet.size, h: bullet.size, r: 255, g: 100, b: 100 }
+        bullet.sprite = { x: bullet.x, y: bullet.y, w: bullet.size, h: bullet.size, r: 255, g: 100, b: 100, path: 'sprites/bullet.png' }
       end
     end
   end
@@ -52,13 +52,13 @@ class Game
 
     state.bullets.each do |bullet|
       bullet.y += bullet.dy
-      bullet.solid[:y] = bullet.y
+      bullet.sprite[:y] = bullet.y
 
       if bullet.y > grid.h
         bullet.dead = true
         state.score -= 1
       end
-      if bullet.solid.intersect_rect?(enemy_rect)
+      if bullet.sprite.intersect_rect?(enemy_rect)
         bullet.dead = true
         state.score += 2
       end
@@ -67,11 +67,11 @@ class Game
   end
 
   def output
-    outputs.solids << Solid.new(player_rect)
+    outputs.sprites << Sprite.new(player_rect.merge(path: 'sprites/player.png'))
 
-    outputs.solids << Solid.new(enemy_rect.merge(r: 150, g: 150, b: 150))
+    outputs.sprites << Sprite.new(enemy_rect.merge(r: 150, g: 150, b: 150, path: 'sprites/enemy.png'))
 
-    outputs.solids << state.bullets.map(&:solid)
+    outputs.sprites << state.bullets.map(&:sprite)
 
     outputs.labels << Label.new(
       x: grid.w * 0.99,
@@ -80,8 +80,6 @@ class Game
       alignment_enum: 2,
       font: 'fonts/Press_Start_2P/PressStart2P-Regular.ttf'
     )
-    outputs.lines << Line.new(x: 0, y: grid.center_y, x2: grid.w, y2: grid.center_y)
-    outputs.lines << Line.new(x: grid.center_x, y: 0, x2: grid.center_x, y2: grid.h)
   end
 
   def serialize

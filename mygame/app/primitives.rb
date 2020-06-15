@@ -38,3 +38,14 @@ class Label < Primitive
   @@attr_keys = %i[x y text size_enum alignment_enum font r g b a]
   attr_accessor(*@@attr_keys)
 end
+
+class Sprite < Primitive
+  @@attr_keys = %i[
+    x y w h path angle a r g b
+    source_x source_y source_w source_h
+    flip_horizontally flip_vertically
+    angle_anchor_x angle_anchor_y
+    tile_x tile_y tile_w tile_h
+  ]
+  attr_accessor(*@@attr_keys)
+end
