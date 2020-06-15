@@ -1,7 +1,11 @@
 # DragonRuby
-/dragonruby
+/dragonruby*
 /font.ttf
 /logs
 /tmp
 /exceptions
-console_history.txt
+/console_history.txt
+/.dragonruby
+/builds
+/console-logo.png
+/open-source-licenses.txt
