@@ -18,6 +18,8 @@ class Game
     state.enemy_dx ||= 5
 
     state.bullets ||= []
+
+    state.score ||= 0
   end
 
   def handle_inputs
@@ -54,9 +56,11 @@ class Game
 
       if bullet.y > grid.h
         bullet.dead = true
+        state.score -= 1
       end
       if bullet.solid.intersect_rect?(enemy_rect)
         bullet.dead = true
+        state.score += 2
       end
     end
     state.bullets = state.bullets.reject(&:dead)
@@ -69,6 +73,13 @@ class Game
 
     outputs.solids << state.bullets.map(&:solid)
 
+    outputs.labels << Label.new(
+      x: grid.w * 0.99,
+      y: grid.h * 0.98,
+      text: state.score,
+      alignment_enum: 2,
+      font: 'fonts/Press_Start_2P/PressStart2P-Regular.ttf'
+    )
     outputs.lines << Line.new(x: 0, y: grid.center_y, x2: grid.w, y2: grid.center_y)
     outputs.lines << Line.new(x: grid.center_x, y: 0, x2: grid.center_x, y2: grid.h)
   end
